@@ -112,6 +112,7 @@ public
 server/uploads/
 server/logs/
 server/temp/
+server/test-api.js
 
 # Frontend specific (React)
 client/build/

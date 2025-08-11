@@ -39,24 +39,33 @@ FullStackProject/
 
 - **Team Management**
   - Create, read, update, delete team members
-  - Validation for name, email, and designation fields
-  - RESTful API endpoints
+  - Comprehensive validation (name, email, designation)
+  - Email uniqueness validation
+  - Search functionality with pagination
+  - RESTful API endpoints with proper error handling
 
 - **Project Management**
   - Create, read, update, delete projects
   - Associate team members with projects
-  - Validation for name, description, and team members
+  - Project name uniqueness validation
+  - Team member existence validation
+  - Search functionality with pagination
 
 - **Task Management**
   - Create, read, update, delete tasks
   - Assign tasks to projects and team members
   - Status tracking (to-do, in-progress, done, cancelled)
-  - Advanced filtering and pagination
+  - Advanced filtering (by project, member, status, date range)
+  - Search functionality with pagination
+  - Deadline validation (future dates only)
 
 - **Data Validation & Error Handling**
-  - Input validation using Joi
-  - Proper error responses
-  - Data integrity checks
+  - Comprehensive input validation using Joi
+  - MongoDB ObjectId validation
+  - Consistent error response format
+  - Data integrity checks and relationships validation
+  - Global error handling middleware
+  - CORS configuration for frontend integration
 
 ### Frontend Features 🚧 (In Development)
 
@@ -221,13 +230,33 @@ curl "http://localhost:8000/api/tasks?project=project-id&status=in-progress&page
 
 ## 🧪 Testing
 
-### Using Postman
+### Automated API Testing
+Run the comprehensive test suite to verify all endpoints:
+
+```bash
+cd server
+npm install
+npm run test:api
+```
+
+### Manual Testing with Postman
 1. Import the API collection (if available)
 2. Set the base URL to `http://localhost:8000`
 3. Test all endpoints
 
 ### Using cURL
 Examples are provided in the API Usage section above.
+
+### Test Coverage
+The test suite covers:
+- ✅ Health check endpoint
+- ✅ Team member CRUD operations
+- ✅ Project CRUD operations  
+- ✅ Task CRUD operations
+- ✅ Search and filtering functionality
+- ✅ Pagination
+- ✅ Data validation
+- ✅ Error handling
 
 ---
 

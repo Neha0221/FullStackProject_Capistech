@@ -1,11 +1,21 @@
-const express=require('express');
-const router=express.Router();
-const {createTeam,getTeam,getAllTeam,updateMember,deleteMember}=require('../controllers/teamController');
+const express = require('express');
+const router = express.Router();
+const { createTeam, getTeam, getAllTeam, updateMember, deleteMember } = require('../controllers/teamController');
+const { validateTeam, validateTeamUpdate, validateObjectId } = require('../middleware/validation');
 
-router.post('/',createTeam);
-router.get('/:id',getTeam);
-router.get('/',getAllTeam);
-router.put('/:id',updateMember);
-router.delete('/:id',deleteMember);
+// Create team member
+router.post('/', validateTeam, createTeam);
 
-module.exports=router;
+// Get all team members (with pagination and search)
+router.get('/', getAllTeam);
+
+// Get single team member
+router.get('/:id', validateObjectId, getTeam);
+
+// Update team member
+router.put('/:id', validateObjectId, validateTeamUpdate, updateMember);
+
+// Delete team member
+router.delete('/:id', validateObjectId, deleteMember);
+
+module.exports = router;

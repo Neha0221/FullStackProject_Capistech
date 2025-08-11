@@ -1,103 +1,174 @@
-const Team=require('../model/Team');
+const Team = require('../model/Team');
 
-const createTeam=async(req,res)=>{
-    try{
-        const {name,email,designation}=req.body;
+// Create Team Member
+const createTeam = async (req, res) => {
+    try {
+        const { name, email, designation } = req.body;
 
-        if(!name || !email || !designation){
-            return res.status(400).send('All fields are required for team member');
+        // Check if team member already exists
+        const teamMemberExist = await Team.findOne({ email });
+        if (teamMemberExist) {
+            return res.status(400).json({
+                success: false,
+                message: 'Team member with this email already exists'
+            });
         }
 
-        const teamMemberExist=await Team.findOne({email});
-        if(teamMemberExist){
-            return res.status(400).send('This member already exist');
-        }
-
-        const TeamCreate=Team.create({
+        const teamMember = await Team.create({
             name,
             email,
             designation
-        })
-
-        res.status(201).json({message: 'Team created Successfully'});
-    }
-    catch(err){
-        res.status(500).json({message:err.message});
-    }
-}
-
-const getTeam=async (req,res)=>{
-   try{
-    const member = await Team.findById(req.params.id);
-    if(!member){
-        return res.status(404).send('Member is not exist');
-    }
-    res.status(200).send(member);
-   }
-   catch(err){
-    res.status(500).json({message:err.message});
-   }
-
-}
-
-const getAllTeam=async (req,res)=>{
-    try{
-        const page=(req.params.page) || 1;
-        const limit=(req.params.limit) || 3;
-
-        const skip=(page-1)*limit;
-        const teams=await Team.find().skip(skip).limit(limit).sort({createdAt: -1});
-
-        const totalMember=Team.countDocuments();
-
-        res.status(200).json({
-            page,
-            limit,
-            totalPages: Math.ceil(totalMember/limit),
-            data: teams
         });
 
+        res.status(201).json({
+            success: true,
+            message: 'Team member created successfully',
+            data: teamMember
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: err.message
+        });
     }
-    catch(err){
-        res.status(500).json({message:err.message});
-    }
-}
+};
 
-const updateMember= async(req,res)=>{
-   try{
+// Get Single Team Member
+const getTeam = async (req, res) => {
+    try {
+        const member = await Team.findById(req.params.id);
+        if (!member) {
+            return res.status(404).json({
+                success: false,
+                message: 'Team member not found'
+            });
+        }
+        res.status(200).json({
+            success: true,
+            data: member
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: err.message
+        });
+    }
+};
+
+// Get All Team Members with Pagination
+const getAllTeam = async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        // Build search filter
+        const filter = {};
+        if (req.query.search) {
+            filter.$or = [
+                { name: { $regex: req.query.search, $options: 'i' } },
+                { email: { $regex: req.query.search, $options: 'i' } },
+                { designation: { $regex: req.query.search, $options: 'i' } }
+            ];
+        }
+
+        const teams = await Team.find(filter)
+            .skip(skip)
+            .limit(limit)
+            .sort({ createdAt: -1 });
+
+        const totalMembers = await Team.countDocuments(filter);
+
+        res.status(200).json({
+            success: true,
+            data: {
+                page,
+                limit,
+                totalMembers,
+                totalPages: Math.ceil(totalMembers / limit),
+                members: teams
+            }
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: err.message
+        });
+    }
+};
+
+// Update Team Member
+const updateMember = async (req, res) => {
+    try {
         const { id } = req.params;
-        const updatedMember=await Team.findByIdAndUpdate(
-            id,   // document id
-            req.body,  // the fields to update
-            {new : true}    // return update document
+        const updateData = req.body;
+
+        // Check if email is being updated and if it already exists
+        if (updateData.email) {
+            const existingMember = await Team.findOne({ 
+                email: updateData.email, 
+                _id: { $ne: id } 
+            });
+            if (existingMember) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Email already exists with another team member'
+                });
+            }
+        }
+
+        const updatedMember = await Team.findByIdAndUpdate(
+            id,
+            updateData,
+            { new: true, runValidators: true }
         );
-        
-        if(!updatedMember){
-            res.status(404).send('Member is not Exist');
+
+        if (!updatedMember) {
+            return res.status(404).json({
+                success: false,
+                message: 'Team member not found'
+            });
         }
 
-        res.status(200).json({message: 'Member is updated successfully'});
-   }
+        res.status(200).json({
+            success: true,
+            message: 'Team member updated successfully',
+            data: updatedMember
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: err.message
+        });
+    }
+};
 
-   catch(err){
-        res.status(500).json({message:err.message});
-   }
-  
-}
-
-const deleteMember= async(req,res)=>{
-    try{
-        const deletedMember=await Team.findByIdAndDelete(req.params.id);
-        if(!deletedMember){
-            res.status(404).send('Member not found');
+// Delete Team Member
+const deleteMember = async (req, res) => {
+    try {
+        const deletedMember = await Team.findByIdAndDelete(req.params.id);
+        if (!deletedMember) {
+            return res.status(404).json({
+                success: false,
+                message: 'Team member not found'
+            });
         }
 
-        res.status(200).json({message: 'Member deleted successfully'});
+        res.status(200).json({
+            success: true,
+            message: 'Team member deleted successfully'
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: err.message
+        });
     }
+};
 
-    catch(err){
-        res.status(500).json({message:err.message});
-    }
-}
-
-module.exports={createTeam,getTeam,getAllTeam,updateMember,deleteMember};
+module.exports = { createTeam, getTeam, getAllTeam, updateMember, deleteMember };
