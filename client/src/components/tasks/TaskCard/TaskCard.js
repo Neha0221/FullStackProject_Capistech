@@ -41,17 +41,23 @@ const TaskCard = ({ task, projects, teams, onEdit, onDelete }) => {
     });
   };
 
-  const getProjectName = (projectId) => {
+  const getProjectName = (projectOrId) => {
+    const projectId = typeof projectOrId === 'object' && projectOrId !== null ? projectOrId._id : projectOrId;
     const project = projects.find(p => p._id === projectId);
-    return project ? project.name : 'Unknown Project';
+    if (project) return project.name;
+    if (projectOrId && typeof projectOrId === 'object' && projectOrId.name) return projectOrId.name;
+    return 'Unknown Project';
   };
 
-  const getMemberNames = (memberIds) => {
-    if (!memberIds || memberIds.length === 0) return 'No members assigned';
+  const getMemberNames = (membersOrIds) => {
+    if (!membersOrIds || membersOrIds.length === 0) return 'No members assigned';
     
-    const memberNames = memberIds.map(memberId => {
+    const memberNames = membersOrIds.map(m => {
+      const memberId = typeof m === 'object' && m !== null ? m._id : m;
       const member = teams.find(t => t._id === memberId);
-      return member ? member.name : 'Unknown Member';
+      if (member) return member.name;
+      if (m && typeof m === 'object' && m.name) return m.name;
+      return 'Unknown Member';
     });
     
     return memberNames.join(', ');

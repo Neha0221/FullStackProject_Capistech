@@ -20,8 +20,10 @@ const TaskForm = ({ task, projects, teams, onSubmit, onCancel }) => {
         title: task.title || '',
         description: task.description || '',
         deadline: task.deadline ? new Date(task.deadline).toISOString().split('T')[0] : '',
-        project: task.project || '',
-        assignedMembers: task.assignedMembers || [],
+        project: typeof task.project === 'object' ? task.project._id : (task.project || ''),
+        assignedMembers: Array.isArray(task.assignedMembers)
+          ? task.assignedMembers.map(m => (typeof m === 'object' ? m._id : m))
+          : [],
         status: task.status || 'to-do'
       });
     }
