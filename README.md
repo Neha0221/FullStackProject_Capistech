@@ -98,7 +98,7 @@ FullStackProject/
 - **jsonwebtoken** - JWT authentication
 - **cors** - Cross-origin resource sharing
 
-### Frontend (Coming Soon)
+### Frontend 
 - **React** - UI library
 - **React Router** - Client-side routing
 - **Axios** - HTTP client
@@ -115,7 +115,7 @@ FullStackProject/
 
 ### 1️⃣ Clone the Repository
 ```bash
-git clone <your-repo-url>
+git clone <my repo-url>
 cd FullStackProject
 ```
 
@@ -129,8 +129,8 @@ npm install
 Create a `.env` file in the `server` directory:
 ```env
 PORT=8000
-MONGO_URI=mongodb+srv://neha:CjryPqGiw5sEn4lf@cluster0.mwiyepg.mongodb.net/Task-management-app?retryWrites=true&w=majority
-JWT_SECRET=your-secret-key
+MONGO_URI=mongodbUrl*******
+JWT_SECRET=secret-key******
 NODE_ENV=development
 ```
 
@@ -145,7 +145,7 @@ npm start
 
 The server will start on `http://localhost:8000`
 
-### 5️⃣ Frontend Setup (Coming Soon)
+### 5️⃣ Frontend Setup
 ```bash
 cd client
 npm install
@@ -265,8 +265,8 @@ The test suite covers:
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `PORT` | Server port | 8000 |
-| `MONGODB_URI` | MongoDB connection string | mongodb://localhost:27017/task-management |
-| `JWT_SECRET` | JWT secret key | your-secret-key |
+| `MONGODB_URI` | MongoDB connection string | mongodbUrl |
+| `JWT_SECRET` | JWT secret key | my-secret-key |
 | `NODE_ENV` | Environment mode | development |
 
 ---
@@ -302,19 +302,9 @@ This project is licensed under the ISC License.
 
 ## 👨‍💻 Author
 
-[Your Name] - Task Management Application
+[Neha Singh] - Task Management Application
 
----
 
-## 🔗 Links
 
-- [GitHub Repository](your-repo-url)
-- [API Documentation](your-api-docs-url)
-- [Live Demo](your-demo-url)
 
----
-
-## 📞 Support
-
-For support and questions, please open an issue in the GitHub repository or contact [your-email@example.com].
 
