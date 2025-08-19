@@ -105,6 +105,14 @@ const getProject = async (req, res) => {
                 projects
             }
         });
+        
+        console.log('Project pagination response:', {
+            page,
+            limit,
+            totalProjects,
+            totalPages: Math.ceil(totalProjects / limit),
+            projectsCount: projects.length
+        });
     } catch (err) {
         res.status(500).json({
             success: false,

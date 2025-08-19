@@ -28,21 +28,28 @@ const TaskList = () => {
       setLoading(true);
       const params = {
         page,
-        limit: 10,
+        limit: 3,
         ...(search && { search }),
         ...(filterParams.status && { status: filterParams.status }),
         ...(filterParams.project && { project: filterParams.project }),
         ...(filterParams.member && { member: filterParams.member })
       };
       
+      console.log('Fetching tasks with params:', params);
       const response = await taskAPI.getAll(params);
       const { data } = response.data;
+      
+      console.log('Tasks API response:', data);
+      console.log('Total tasks:', data.totalTasks);
+      console.log('Total pages:', data.totalPages);
+      console.log('Current page:', data.page);
       
       setTasks(data.tasks);
       setTotalPages(data.totalPages);
       setTotalTasks(data.totalTasks);
       setCurrentPage(data.page);
     } catch (err) {
+      console.error('Error fetching tasks:', err);
       setError(err.response?.data?.message || 'Failed to fetch tasks');
     } finally {
       setLoading(false);
@@ -235,6 +242,7 @@ const TaskList = () => {
 
           {totalPages > 1 && (
             <div className={styles.pagination}>
+              {console.log('Rendering pagination - totalPages:', totalPages, 'currentPage:', currentPage)}
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}

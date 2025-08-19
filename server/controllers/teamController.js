@@ -91,6 +91,14 @@ const getAllTeam = async (req, res) => {
                 members: teams
             }
         });
+        
+        console.log('Team pagination response:', {
+            page,
+            limit,
+            totalMembers,
+            totalPages: Math.ceil(totalMembers / limit),
+            teamsCount: teams.length
+        });
     } catch (err) {
         res.status(500).json({
             success: false,

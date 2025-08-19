@@ -143,16 +143,17 @@ const Dashboard = () => {
         <div className={styles.section}>
           <h2>Quick Actions</h2>
           <div className={styles.quickActions}>
-            <Link to="/projects" className={styles.actionCard}>
-              <div className={styles.actionIcon}>📋</div>
-              <h3>Manage Projects</h3>
-              <p>Create and manage your projects</p>
-            </Link>
-            
+
             <Link to="/teams" className={styles.actionCard}>
               <div className={styles.actionIcon}>👥</div>
               <h3>Manage Teams</h3>
               <p>Add and manage team members</p>
+            </Link>
+
+            <Link to="/projects" className={styles.actionCard}>
+              <div className={styles.actionIcon}>📋</div>
+              <h3>Manage Projects</h3>
+              <p>Create and manage your projects</p>
             </Link>
             
             <Link to="/tasks" className={styles.actionCard}>

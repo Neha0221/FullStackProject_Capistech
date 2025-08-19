@@ -22,7 +22,7 @@ const ProjectList = () => {
       setLoading(true);
       const params = {
         page,
-        limit: 10,
+        limit: 5,
         ...(search && { search })
       };
       

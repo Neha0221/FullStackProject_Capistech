@@ -132,6 +132,14 @@ const getTasks = async (req, res) => {
                 tasks
             }
         });
+        
+        console.log('Task pagination response:', {
+            page,
+            limit,
+            totalTasks,
+            totalPages: Math.ceil(totalTasks / limit),
+            tasksCount: tasks.length
+        });
     } catch (err) {
         res.status(500).json({
             success: false,

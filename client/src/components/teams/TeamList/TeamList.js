@@ -21,18 +21,25 @@ const TeamList = () => {
       setLoading(true);
       const params = {
         page,
-        limit: 10,
+        limit: 3,
         ...(search && { search })
       };
       
+      console.log('Fetching teams with params:', params);
       const response = await teamAPI.getAll(params);
       const { data } = response.data;
+      
+      console.log('Teams API response:', data);
+      console.log('Total members:', data.totalMembers);
+      console.log('Total pages:', data.totalPages);
+      console.log('Current page:', data.page);
       
       setTeams(data.members);
       setTotalPages(data.totalPages);
       setTotalMembers(data.totalMembers);
       setCurrentPage(data.page);
     } catch (err) {
+      console.error('Error fetching teams:', err);
       setError(err.response?.data?.message || 'Failed to fetch teams');
     } finally {
       setLoading(false);
@@ -138,6 +145,7 @@ const TeamList = () => {
 
           {totalPages > 1 && (
             <div className={styles.pagination}>
+              {console.log('Rendering pagination - totalPages:', totalPages, 'currentPage:', currentPage)}
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
