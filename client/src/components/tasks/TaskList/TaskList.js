@@ -4,8 +4,10 @@ import TaskCard from '../TaskCard/TaskCard';
 import TaskForm from '../TaskForm/TaskForm';
 import Loading from '../../common/Loading/Loading';
 import styles from './TaskList.module.css';
+import { useAuth } from '../../../context/AuthContext';
 
 const TaskList = () => {
+  const { user } = useAuth();
   const [tasks, setTasks] = useState([]);
   const [projects, setProjects] = useState([]);
   const [teams, setTeams] = useState([]);
@@ -131,12 +133,14 @@ const TaskList = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h2>Tasks</h2>
-        <button 
-          className={styles.addButton}
-          onClick={() => setShowForm(true)}
-        >
-          Add Task
-        </button>
+        {(user?.role === 'owner' || user?.role === 'admin') && (
+          <button 
+            className={styles.addButton}
+            onClick={() => setShowForm(true)}
+          >
+            Add Task
+          </button>
+        )}
       </div>
 
       {error && (
@@ -233,8 +237,8 @@ const TaskList = () => {
                   task={task}
                   projects={projects}
                   teams={teams}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
+                  onEdit={(t) => (user?.role === 'owner' || user?.role === 'admin') && handleEdit(t)}
+                  onDelete={(id) => (user?.role === 'owner' || user?.role === 'admin') && handleDelete(id)}
                 />
               ))}
             </div>

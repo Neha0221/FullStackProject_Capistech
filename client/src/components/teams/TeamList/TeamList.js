@@ -4,8 +4,10 @@ import TeamCard from '../TeamCard/TeamCard';
 import TeamForm from '../TeamForm/TeamForm';
 import Loading from '../../common/Loading/Loading';
 import styles from './TeamList.module.css';
+import { useAuth } from '../../../context/AuthContext';
 
 const TeamList = () => {
+  const { user } = useAuth();
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -89,12 +91,14 @@ const TeamList = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h2>Team Members</h2>
-        <button 
-          className={styles.addButton}
-          onClick={() => setShowForm(true)}
-        >
-          Add Team Member
-        </button>
+        {(user?.role === 'owner' || user?.role === 'admin') && (
+          <button 
+            className={styles.addButton}
+            onClick={() => setShowForm(true)}
+          >
+            Add Team Member
+          </button>
+        )}
       </div>
 
       {error && (
@@ -136,8 +140,8 @@ const TeamList = () => {
                 <TeamCard
                   key={team._id}
                   team={team}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
+                  onEdit={(t) => (user?.role === 'owner' || user?.role === 'admin') && handleEdit(t)}
+                  onDelete={(id) => (user?.role === 'owner' || user?.role === 'admin') && handleDelete(id)}
                 />
               ))}
             </div>

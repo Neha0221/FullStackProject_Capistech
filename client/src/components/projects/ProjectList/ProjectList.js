@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { projectAPI, teamAPI } from '../../../services/api';
+import { useAuth } from '../../../context/AuthContext';
 import ProjectCard from '../ProjectCard/ProjectCard';
 import ProjectForm from '../ProjectForm/ProjectForm';
 import Loading from '../../common/Loading/Loading';
 import styles from './ProjectList.module.css';
 
 const ProjectList = () => {
+  const { user } = useAuth();
   const [projects, setProjects] = useState([]);
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -93,12 +95,14 @@ const ProjectList = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h2>Projects</h2>
-        <button 
-          className={styles.addButton}
-          onClick={() => setShowForm(true)}
-        >
-          Add Project
-        </button>
+        {(user?.role === 'owner' || user?.role === 'admin') && (
+          <button 
+            className={styles.addButton}
+            onClick={() => setShowForm(true)}
+          >
+            Add Project
+          </button>
+        )}
       </div>
 
       {error && (
@@ -141,8 +145,8 @@ const ProjectList = () => {
                   key={project._id}
                   project={project}
                   teams={teams}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
+                  onEdit={(p) => (user?.role === 'owner' || user?.role === 'admin') && handleEdit(p)}
+                  onDelete={(id) => (user?.role === 'owner' || user?.role === 'admin') && handleDelete(id)}
                 />
               ))}
             </div>

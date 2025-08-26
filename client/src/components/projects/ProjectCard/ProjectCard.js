@@ -1,7 +1,10 @@
 import React from 'react';
 import styles from './ProjectCard.module.css';
+import { useAuth } from '../../../context/AuthContext';
 
 const ProjectCard = ({ project, teams, onEdit, onDelete }) => {
+  const { user } = useAuth();
+  
   const handleEdit = () => {
     onEdit(project);
   };
@@ -29,22 +32,25 @@ const ProjectCard = ({ project, teams, onEdit, onDelete }) => {
         <div className={styles.icon}>
           📁
         </div>
-        <div className={styles.actions}>
-          <button 
-            onClick={handleEdit}
-            className={styles.editButton}
-            title="Edit"
-          >
-            ✏️
-          </button>
-          <button 
-            onClick={handleDelete}
-            className={styles.deleteButton}
-            title="Delete"
-          >
-            🗑️
-          </button>
-        </div>
+        {/* Only show edit/delete actions for admin/owner users */}
+        {(user?.role === 'owner' || user?.role === 'admin') && (
+          <div className={styles.actions}>
+            <button 
+              onClick={handleEdit}
+              className={styles.editButton}
+              title="Edit"
+            >
+              ✏️
+            </button>
+            <button 
+              onClick={handleDelete}
+              className={styles.deleteButton}
+              title="Delete"
+            >
+              🗑️
+            </button>
+          </div>
+        )}
       </div>
       
       <div className={styles.content}>

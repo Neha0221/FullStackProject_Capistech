@@ -13,6 +13,10 @@ const api = axios.create({
 // Request interceptor
 api.interceptors.request.use(
   (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     console.log('API Request:', config.method?.toUpperCase(), config.url);
     return config;
   },
@@ -37,6 +41,7 @@ api.interceptors.response.use(
 export const teamAPI = {
   getAll: (params = {}) => api.get('/teams', { params }),
   getById: (id) => api.get(`/teams/${id}`),
+  getSummary: (id) => api.get(`/teams/${id}/summary`),
   create: (data) => api.post('/teams', data),
   update: (id, data) => api.put(`/teams/${id}`, data),
   delete: (id) => api.delete(`/teams/${id}`),

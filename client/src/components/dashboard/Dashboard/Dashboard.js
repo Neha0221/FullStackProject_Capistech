@@ -3,8 +3,11 @@ import { Link } from 'react-router-dom';
 import { projectAPI, teamAPI, taskAPI } from '../../../services/api';
 import Loading from '../../common/Loading/Loading';
 import styles from './Dashboard.module.css';
+import StatusPieChart from '../../common/Charts/StatusPieChart';
+import { useAuth } from '../../../context/AuthContext';
 
 const Dashboard = () => {
+  const { user } = useAuth();
   const [stats, setStats] = useState({
     projects: 0,
     teams: 0,
@@ -74,7 +77,7 @@ const Dashboard = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1>Dashboard</h1>
-        <p>Welcome to your Task Management System</p>
+        <p>Welcome{user?.name ? `, ${user.name}` : ''} to your Task Management System</p>
       </div>
 
       {error && (
@@ -112,32 +115,7 @@ const Dashboard = () => {
       <div className={styles.sections}>
         <div className={styles.section}>
           <h2>Task Status Overview</h2>
-          <div className={styles.taskStats}>
-            <div className={styles.taskStat}>
-              <span className={styles.taskLabel}>To Do</span>
-              <span className={styles.taskCount} style={{ color: '#6c757d' }}>
-                {stats.tasksByStatus['to-do']}
-              </span>
-            </div>
-            <div className={styles.taskStat}>
-              <span className={styles.taskLabel}>In Progress</span>
-              <span className={styles.taskCount} style={{ color: '#ffc107' }}>
-                {stats.tasksByStatus['in-progress']}
-              </span>
-            </div>
-            <div className={styles.taskStat}>
-              <span className={styles.taskLabel}>Done</span>
-              <span className={styles.taskCount} style={{ color: '#28a745' }}>
-                {stats.tasksByStatus['done']}
-              </span>
-            </div>
-            <div className={styles.taskStat}>
-              <span className={styles.taskLabel}>Cancelled</span>
-              <span className={styles.taskCount} style={{ color: '#dc3545' }}>
-                {stats.tasksByStatus['cancelled']}
-              </span>
-            </div>
-          </div>
+          <StatusPieChart statuses={stats.tasksByStatus} />
         </div>
 
         <div className={styles.section}>

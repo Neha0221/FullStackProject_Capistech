@@ -1,4 +1,6 @@
 const Team = require('../model/Team');
+const Project = require('../model/projectModel');
+const Task = require('../model/taskModel');
 
 // Create Team Member
 const createTeam = async (req, res) => {
@@ -180,3 +182,58 @@ const deleteMember = async (req, res) => {
 };
 
 module.exports = { createTeam, getTeam, getAllTeam, updateMember, deleteMember };
+
+// Get per-member summary: project count, task count, and task status breakdown
+const getMemberSummary = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Ensure member exists
+        const member = await Team.findById(id);
+        if (!member) {
+            return res.status(404).json({
+                success: false,
+                message: 'Team member not found'
+            });
+        }
+
+        // Count projects where member is included
+        const [projectCount, taskAgg] = await Promise.all([
+            Project.countDocuments({ teamMember: id }),
+            Task.aggregate([
+                { $match: { assignedMembers: member._id } },
+                { $group: { _id: '$status', count: { $sum: 1 } } }
+            ])
+        ]);
+
+        const statusCounts = taskAgg.reduce((acc, cur) => {
+            acc[cur._id] = cur.count;
+            return acc;
+        }, {});
+
+        const totalTasks = Object.values(statusCounts).reduce((a, b) => a + b, 0);
+
+        res.status(200).json({
+            success: true,
+            data: {
+                memberId: id,
+                projects: projectCount,
+                tasks: totalTasks,
+                statuses: {
+                    'to-do': statusCounts['to-do'] || 0,
+                    'in-progress': statusCounts['in-progress'] || 0,
+                    'done': statusCounts['done'] || 0,
+                    'cancelled': statusCounts['cancelled'] || 0
+                }
+            }
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: err.message
+        });
+    }
+};
+
+module.exports.getMemberSummary = getMemberSummary;

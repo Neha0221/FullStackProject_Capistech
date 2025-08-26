@@ -115,6 +115,51 @@
   font-size: 0.8rem;
 }
 
+.metrics {
+  margin-top: 0.5rem;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem 1rem;
+  margin-top: 0.5rem;
+}
+
+.metricBox {
+  background: #f7f8fa;
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+}
+
+.metricLabel {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.metricValue {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.statusRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px dashed #eee;
+}
+
+.statusRow:last-child {
+  border-bottom: none;
+}
+
+.errorText {
+  color: #d33;
+}
+
 @media (max-width: 768px) {
   .card {
     padding: 1rem;
