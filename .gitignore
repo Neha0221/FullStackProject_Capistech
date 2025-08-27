@@ -81,7 +81,13 @@ dist
 
 # Gatsby files
 .cache/
-public
+# IMPORTANT: Do not ignore React's public folder. Gatsby generates a top-level
+# public folder as an output directory, but our CRA app needs client/public tracked.
+# If you need to ignore a top-level Gatsby build output, use '/public'.
+#/public
+# Ensure client/public is tracked
+!client/public/
+!client/public/**
 
 # Vuepress build output
 .vuepress/dist
