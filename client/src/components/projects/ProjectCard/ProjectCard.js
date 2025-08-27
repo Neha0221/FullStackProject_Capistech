@@ -40,7 +40,7 @@ const ProjectCard = ({ project, teams, onEdit, onDelete }) => {
               className={styles.editButton}
               title="Edit"
             >
-              ✏️
+              📝
             </button>
             <button 
               onClick={handleDelete}

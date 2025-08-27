@@ -1,0 +1,13 @@
+{
+  "name": "fullstack-project",
+  "version": "1.0.0",
+  "description": "Full Stack Project with React Frontend and Node.js Backend",
+  "scripts": {
+    "build": "cd client && npm install && npm run build",
+    "start": "cd server && npm install && npm start"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}
