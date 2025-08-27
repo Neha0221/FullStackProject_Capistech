@@ -13,18 +13,18 @@ const ProjectCard = ({ project, teams, onEdit, onDelete }) => {
     onDelete(project._id);
   };
 
-  const getTeamMemberNames = () => {
-    if (!project.teamMember || project.teamMember.length === 0) {
-      return 'No team members assigned';
-    }
+  // const getTeamMemberNames = () => {
+  //   if (!project.teamMember || project.teamMember.length === 0) {
+  //     return 'No team members assigned';
+  //   }
 
-    const memberNames = project.teamMember.map(member => {
-      const teamMember = teams.find(team => team._id === member._id || team._id === member);
-      return teamMember ? teamMember.name : 'Unknown Member';
-    });
+  //   const memberNames = project.teamMember.map(member => {
+  //     const teamMember = teams.find(team => team._id === member._id || team._id === member);
+  //     return teamMember ? teamMember.name : 'Unknown Member';
+  //   });
 
-    return memberNames.join(', ');
-  };
+  //   return memberNames.join(', ');
+  // };
 
   return (
     <div className={styles.card}>
